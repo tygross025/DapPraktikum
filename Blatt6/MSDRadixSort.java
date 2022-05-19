@@ -19,7 +19,7 @@ public class RadixSort {
 			swapElems(dataCopy, i, dataCopy.length-i-1);
 		}
 
-		//System.out.println("Arrays.sort method: " + Arrays.toString(dataCopy));
+		System.out.println("Arrays.sort method: " + Arrays.toString(dataCopy));
 
 		//Anfang Zeitmessung
 		long t1 = System.currentTimeMillis();
@@ -39,13 +39,32 @@ public class RadixSort {
      	int[] arr = {1,5,7,324,6,32};
     }
 
+	public static void msdRadix(int[] data) {
+		msdRadix(data, 0, data.length-1, 3);
+	}
+
+	public static void msdRadix(int[] data, int l, int r, int b) {
+		if (b < 0) return;
+		/*
+		if (r-l+1 <= 32) {
+			//Insertion Sort
+		}
+		*/
+		
+		int[] indexArray = sortByByte(data, l, r, b);
+		for (int i = indexArray.length; i > 0; i++) {
+			msdRadix(data, indexArray[i-1]+l, indexArray[i]+l, b-1);
+		}
+		msdRadix(data, l, indexArray[0], b-1);
+	}
+
     public static void lsdRadix(int[] data) {
 		for (int b = 0; b < 4; b++) {
 			sortByByte(data, 0, data.length-1, b);
 		}
     }
 
-    public static void sortByByte(int[] input, int l, int r, int b){
+    public static int[] sortByByte(int[] input, int l, int r, int b){
 		//int min = getMin(input, l, r, b);
 		//int max = getMax(input, l, r, b);
 
@@ -66,6 +85,8 @@ public class RadixSort {
         for (int i = 0; i < sortArray.length; i++) {
 			input[i+l] = sortArray[i];
         }
+
+        return countArray;
     }
 
 	/*
