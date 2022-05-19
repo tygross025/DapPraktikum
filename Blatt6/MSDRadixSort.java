@@ -2,8 +2,8 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class RadixSort {
-    public static void main(String[] args){
+public class MSDRadixSort {
+	public static void main(String[] args){
 
 		//Liest Input und bricht ab, falls ungültig
 		int[] data = readInput();
@@ -19,102 +19,77 @@ public class RadixSort {
 			swapElems(dataCopy, i, dataCopy.length-i-1);
 		}
 
-		System.out.println("Arrays.sort method: " + Arrays.toString(dataCopy));
+		MSDRadixSort sort = new MSDRadixSort();
 
-		//Anfang Zeitmessung
+		//Zeitmessung & Sortieren
 		long t1 = System.currentTimeMillis();
-
-		//Hier Sortieren
-		lsdRadix(data);
-
-		//Ende Zeitmessung
+		sort.msdRadix(data);
 		long t2 = System.currentTimeMillis();
 
-		//Prüft, dass data richtig sortiert wird
 		assert Arrays.equals(data, dataCopy);
 
-		System.out.println(Arrays.toString(data));
+		//Ausgabe
+		if (args.length == 0 || !args[0].equals("-q")) {
+			System.out.println(Arrays.toString(data));
+		}
+		System.out.println("Runtime: " + (t2-t1) + "ms");
+	}
 
-		System.out.println("RadixSort runtime: " + (t2-t1) + "ms");
-     	int[] arr = {1,5,7,324,6,32};
-    }
-
-	public static void msdRadix(int[] data) {
+	//Initiale Aufruf
+	public void msdRadix(int[] data) {
 		msdRadix(data, 0, data.length-1, 3);
 	}
 
-	public static void msdRadix(int[] data, int l, int r, int b) {
-		if (b < 0) return;
-		/*
+	public void msdRadix(int[] data, int l, int r, int b) {
+		if (b < 0 || l >= r) return;
+
+		//Naives Algorithmus
 		if (r-l+1 <= 32) {
-			//Insertion Sort
+			insertionSort(data, l, r);
 		}
-		*/
-		
+
+		//Sortiere Arrayinterval [l,r] nach dem b-niederwertigsten Byte
 		int[] indexArray = sortByByte(data, l, r, b);
-		for (int i = indexArray.length; i > 0; i++) {
-			msdRadix(data, indexArray[i-1]+l, indexArray[i]+l, b-1);
+
+		//Rekursive Aufrufe für Subintervalle nach dem (b-1)-niederwertigsten Bytre
+		for (int i = 0; i < indexArray.length-1; i++) {
+			msdRadix(data, indexArray[i+1]+1, indexArray[i], b-1);
 		}
-		msdRadix(data, l, indexArray[0], b-1);
 	}
 
-    public static void lsdRadix(int[] data) {
-		for (int b = 0; b < 4; b++) {
-			sortByByte(data, 0, data.length-1, b);
-		}
-    }
-
     public static int[] sortByByte(int[] input, int l, int r, int b){
-		//int min = getMin(input, l, r, b);
-		//int max = getMax(input, l, r, b);
 
+		//Frequenzarray erzeugen und Hilfsarray für sortierte Werte anlegen
         int[] countArray = count(input, l, r, b);
         int[] sortArray = new int[r-l+1];
 
+		//Frequenzarray aufsummieren wie bei CountingSort
         for (int i = countArray.length-2; i >= 0; i--) {
 			countArray[i] += countArray[i+1];
         }
 
+		//Zu sortierende Elemente in entsprechende Intervalle von Hilfsarray stabil eintragen
         for (int i = r; i >= l; i--){
             int key = bLowestByte(input[i], b);
 			countArray[key]--;
             sortArray[countArray[key]] = input[i];
         }
 
-		//Sortierte Arrayintervall zurück in input Array übertragen
+		//Sortiertes Array zurück in input-Arrayintervall übertragen
         for (int i = 0; i < sortArray.length; i++) {
 			input[i+l] = sortArray[i];
         }
 
-        return countArray;
+		// Erzeuge Array, damit Elemente in input[l,r] mit b-Byte i im Subintervall [C[i+1]+1, C[i]] liegen
+		int[] C = new int[257];
+		C[0] = r;
+		for (int i = 0; i < countArray.length; i++) {
+			C[i+1] = countArray[i]+l-1;
+		}
+        return C;
     }
 
-	/*
-    //berechnet min in Interval l bis r
-    public static int getMin(int[] data, int l, int r){
-        int min = data[l];
-        for(int i = l; l <= r; i++){
-            if (data[i]<min){
-                //n ist kleiner als min
-                min = data[i];
-            }
-        }
-        return min;
-    }
-    
-    //berechnet max in Interval l bis r
-    public static int getMax(int[] data, int l, int r){
-        int max = data[l];
-        for(int i = l; l <= r; i++){
-            if (data[i]>max){
-                //n ist groeßer als max
-                max = data[i];
-            }
-        }
-        return max;
-    }
-    */
-
+	//Frequenzarray von A[l,r] nach b-te Byte erzeugen, Schlüssel liegen in der Menge {0,...,255}
     public static int[] count(int[] A, int l, int r, int b){
         int[] c = new int[256];
 
@@ -128,6 +103,26 @@ public class RadixSort {
 
     public static int bLowestByte(int n , int b) {
 		return (n >> (8 * (b))) & 0xFF;
+    }
+
+    public static void insertionSort(int[] data, int l, int r) {
+		for (int i = l; i <= r; i++) {
+			int n = data[i];
+			int j = i-1;
+
+			/*
+			while (j >= l && data[j] < n) {
+				swapElems(data, j, j+1);
+				j--;
+			}
+			*/
+
+			while (j >= l && data[j] < n) {
+				data[j+1] = data[j];
+				j--;
+			}
+			data[j+1] = n;
+		}
     }
 
     public static void swapElems(int[] arr, int i1, int i2) {

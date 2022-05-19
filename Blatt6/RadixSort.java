@@ -19,50 +19,47 @@ public class RadixSort {
 			swapElems(dataCopy, i, dataCopy.length-i-1);
 		}
 
-		//System.out.println("Arrays.sort method: " + Arrays.toString(dataCopy));
+		RadixSort sort = new RadixSort();
 
-		//Anfang Zeitmessung
+		//Zeitmessung & Sortieren
 		long t1 = System.currentTimeMillis();
-
-		//Hier Sortieren
-		lsdRadix(data);
-
-		//Ende Zeitmessung
+		sort.lsdRadix(data);
 		long t2 = System.currentTimeMillis();
 
-		//Prüft, dass data richtig sortiert wird
 		assert Arrays.equals(data, dataCopy);
 
-		System.out.println(Arrays.toString(data));
-
-		System.out.println("RadixSort runtime: " + (t2-t1) + "ms");
-     	int[] arr = {1,5,7,324,6,32};
+		//Ausgabe
+		if (args.length == 0 || !args[0].equals("-q")) {
+			System.out.println(Arrays.toString(data));
+		}
+		System.out.println("Runtime: " + (t2-t1) + "ms");
     }
 
-    public static void lsdRadix(int[] data) {
+    public void lsdRadix(int[] data) {
 		for (int b = 0; b < 4; b++) {
 			sortByByte(data, 0, data.length-1, b);
 		}
     }
 
     public static void sortByByte(int[] input, int l, int r, int b){
-		//int min = getMin(input, l, r, b);
-		//int max = getMax(input, l, r, b);
 
+		//Frequenzarray erzeugen und Hilfsarray für sortierte Werte anlegen
         int[] countArray = count(input, l, r, b);
         int[] sortArray = new int[r-l+1];
 
+		//Frequenzarray aufsummieren wie bei CountingSort
         for (int i = countArray.length-2; i >= 0; i--) {
 			countArray[i] += countArray[i+1];
         }
 
+		//Zu sortierende Elemente in entsprechende Intervalle von Hilfsarray stabil eintragen
         for (int i = r; i >= l; i--){
             int key = bLowestByte(input[i], b);
 			countArray[key]--;
             sortArray[countArray[key]] = input[i];
         }
 
-		//Sortierte Arrayintervall zurück in input Array übertragen
+		//Sortierte Hilfsarray zurück in input-Arrayintervall übertragen
         for (int i = 0; i < sortArray.length; i++) {
 			input[i+l] = sortArray[i];
         }
@@ -94,6 +91,7 @@ public class RadixSort {
     }
     */
 
+	//Frequenzarray von A[l,r] nach b-te Byte erzeugen, Schlüssel liegen in der Menge {0,...,255}
     public static int[] count(int[] A, int l, int r, int b){
         int[] c = new int[256];
 
