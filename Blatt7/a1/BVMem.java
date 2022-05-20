@@ -1,5 +1,6 @@
+package Blatt7.a1;
+
 import java.util.*;
-import java.math.*;
 
 class BVMem {
       
