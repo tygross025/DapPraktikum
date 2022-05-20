@@ -15,20 +15,15 @@ class BitVector {
     }
 
     public boolean get(int index){
-        if (index >= size || index <0){
-            //error
-        }
-        return bitsArray[index/32] << (index) <0;
+        int n = bitsArray[index/32] << (index % 32); //findet int in bitsArray und shift die Zahl links index % 32 mal, sodass das Bit in index liegt im pos 0
+        return n < 0; //Falls pos 0 = 1, dann ist n negative, Falls pos 0 = 0 dann ist n positive.
     }
 
     public void set(int index, boolean value){
-        if (index >= size || index <0){
-            //error
-        }
         //wo im int array index liegt
         int arrayIndex = index/32;
         //wo im int index liegt
-        int bitIndex = 1 << (31-(index%32)); //bitIndex = 2^(index % 32)
+        int bitIndex = 1 << (31-(index%32)); //bitIndex = 31 - 2^(index % 32)
 
         if (value) {
             bitsArray[arrayIndex] = bitsArray[arrayIndex] | bitIndex;
