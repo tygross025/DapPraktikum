@@ -1,7 +1,5 @@
 package Blatt7.b1;
 
-import Blatt7.b1.BitVector;
-
 class BitVectorRank {
     private BitVector bitVector;
     private int[] rankArray;
