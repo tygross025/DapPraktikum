@@ -1,7 +1,6 @@
 package Blatt8;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Random;
 import java.util.HashMap;
 
