@@ -20,9 +20,11 @@ public class Graph {
         }
     }
 
+    public int getN() { return n; }
+    public int getM() { return m; }
 
     public boolean contains(int id){
-        return id < n;
+        return id < n && id >= 0;
     }
 
     public Node getNode(int id){
