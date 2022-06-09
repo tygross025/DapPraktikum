@@ -1,23 +1,19 @@
 package Blatt9;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Graph {
     private int n,m; //Anzahl von Knoten(n) und Kanten(m)
-    public Node[] knotenArray;
+    private Node[] knotenArray;
 
-    public Graph (int n){
+    public Graph (){
         //node Array init
-        knotenArray = new Node[n];
-        this.n = n;
-        for(int i = 0; i < n; i++){
-            //neu Node mit id i in index i
-            knotenArray[i] = new Node(i);
-        }
+        knotenArray = new Node[0];
+        this.n = 0;
+        this.m = 0;
     }
 
     public int getN() { return n; }
@@ -45,8 +41,23 @@ public class Graph {
         return true;
     }
 
+    public void addNode(){
+        n++; //Knoten Anzahl incrementieren
+        Node newNode = new Node(n-1);
+        Node[] newKnotenArray = new Node[n];
+
+        //Kopieren KnotenArray in newKnotenArray
+        for(int i = 0; i < n-1; i++){
+            newKnotenArray[i] = knotenArray[i];
+        }
+
+        //newNode in newKnotenArray einfügen
+        newKnotenArray[n-1] = newNode;
+        knotenArray = newKnotenArray;
+    }
+
     public static Graph fromFile(String filepath){
-        Graph graph = null;
+        Graph graph = new Graph();
         try {
 
             File file = new File("./Blatt9/"+ filepath);
@@ -76,7 +87,10 @@ public class Graph {
                     }
                     int e = Integer.parseInt(intStr.toString());
 
-                    graph = new Graph(v); //Graph init
+                    for (i = 0; i < v; i++){
+                        //add v nodes in Graph
+                        graph.addNode();
+                    }
                 } else if(c =='e'){
                     //Parse erste Zahl
                     int i = 2; //anfang erste Zahl ist in pos 2
