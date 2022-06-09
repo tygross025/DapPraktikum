@@ -1,7 +1,6 @@
 package Blatt9;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -99,7 +98,7 @@ public class Graph {
                     }
                 }
             }
-        } catch (IOException e){
+        } catch (Exception e){
             System.out.println("Error in Graph file");
         }
         return graph;
