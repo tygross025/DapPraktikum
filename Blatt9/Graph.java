@@ -56,18 +56,31 @@ public class Graph {
         knotenArray = newKnotenArray;
     }
 
-    public static Graph fromFile(String filepath){
+    public static Graph fromFile(String filepath) throws IOException {
         Graph graph = new Graph();
-        try {
 
+        try {
             File file = new File("./Blatt9/"+ filepath);
             Scanner input = new Scanner(file);
+            boolean init = false;
+
+            int v = 0, e = 0;
+
             while (input.hasNextLine()){
                 String data = input.nextLine();
-                char c =data.charAt(0);
-                if (c == 'c'){
-                    //line ist Kommentar. Mach nichts
-                } else if (c == 'p'){
+
+                if (data.length() == 0) {
+                    continue;
+                }
+
+                char c = data.charAt(0);
+                if (c == 'p') {
+
+                    if (init) {
+                        throw new IOException("More than one problem line");
+                    } else {
+                        init = true;
+                    }
 
                     //Parse |V|
                     int i = 7; //anfang erste Zahl in "P edge |V| |E|";
@@ -76,7 +89,7 @@ public class Graph {
                         intStr.append(data.charAt(i));
                         i++;
                     }
-                    int v = Integer.parseInt(intStr.toString());
+                    v = Integer.parseInt(intStr.toString());
 
                     //Parse |E|
                     i++;//anfang zweite Zahl E in "P edge |V| |E|";
@@ -85,13 +98,18 @@ public class Graph {
                         intStr.append(data.charAt(i));
                         i++;
                     }
-                    int e = Integer.parseInt(intStr.toString());
+                    e = Integer.parseInt(intStr.toString());
 
                     for (i = 0; i < v; i++){
                         //add v nodes in Graph
                         graph.addNode();
                     }
-                } else if(c =='e'){
+                } else if (c =='e'){
+
+                    if (!init){
+                        throw new IOException("No problem line before first edge line");
+                    }
+
                     //Parse erste Zahl
                     int i = 2; //anfang erste Zahl ist in pos 2
                     StringBuilder intStr = new StringBuilder();
@@ -111,12 +129,20 @@ public class Graph {
                     int dst = Integer.parseInt(intStr.toString());
 
                     if(!graph.addEdge(src, dst)){ //ruf addedge an
-                        System.out.println("Error adding Edge: " + src + " " + dst);
+                        System.err.println("Error adding Edge: " + src + " " + dst);
+                        throw new IOException();
                     }
+                } else if (c != 'c') {
+                    throw new IOException("Unknown line marker " + c);
                 }
             }
-        } catch (IOException e){
-            System.out.println("Error in Graph file");
+
+            if (e != graph.getM()) {
+                throw new IOException("Graph does not have expected number of edges");
+            }
+
+        } catch (Exception e){
+            throw new IOException("Error in graph file: " + e.getMessage());
         }
         return graph;
     }
