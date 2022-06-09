@@ -1,10 +1,12 @@
+import Blatt8.SimpleHT;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
 import java.util.HashMap;
 
 class SimpleHTTest234 {
-
+/*
     static Random rng = new Random();
     
     interface Generator<T> {
@@ -87,6 +89,7 @@ class SimpleHTTest234 {
                 }
             }
         }
+
     }
 
     public static void main(String[] args) {
@@ -97,6 +100,7 @@ class SimpleHTTest234 {
         // Aufgabe 2:
         // Generator für alphanumerische Strings der Länge 42
         */
+        /*
         System.out.println("Teste Aufgabe 2...");
         
         Generator<Integer> intGen = () -> rng.nextInt();
@@ -110,7 +114,7 @@ class SimpleHTTest234 {
         testHT(intGen, intGen, new SimpleHT<Integer, Integer>(capacity));
         testHT(doubleGen, intGen, new SimpleHT<Double, Integer>(capacity));
         testHT(stringGen, floatGen, new SimpleHT<String, Float>(capacity));
-        
+        */
         
         
         /*
@@ -118,6 +122,7 @@ class SimpleHTTest234 {
         // **********************************************************************
         // Aufgabe 3:
         */
+        /*
         System.out.println("Teste Aufgabe 3...");
         
         // Hashfunktion 1: Gibt 1 zurueck, wenn Key 0 ist, und sonst 0.
@@ -149,7 +154,9 @@ class SimpleHTTest234 {
             (key) -> {
                 try { return Integer.parseInt(key); }
                 catch (Exception e) { return 0; }
-            }));           
+            }));
+
+         */
         
         
         /*
@@ -157,14 +164,15 @@ class SimpleHTTest234 {
         // **********************************************************************
         // Aufgabe 4:
         */
+        /*
         System.out.println("Teste Aufgabe 4...");
         
         // Hier ergänzen: Initialisierung von Primzahl und Zufallsvariablen
 		int p = Integer.MAX_VALUE;
 		long a = (long) Random.nextInt(p-1)+1;
 		int b = Random.nextInt(p-1)+1;
-        
-
+        */
+/*
         testHT(intGen, intGen, new SimpleHT<Integer, Double>(capacity,
             
             ));
@@ -174,4 +182,6 @@ class SimpleHTTest234 {
             ));
         
     }
+
+ */
 }
