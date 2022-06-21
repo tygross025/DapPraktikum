@@ -1,8 +1,11 @@
 package Blatt11;
 
+import Blatt9.Edge;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class AdjArrayGraph {
@@ -60,7 +63,6 @@ public class AdjArrayGraph {
                     e = Integer.parseInt(intStr.toString());
 
                     firstEdge = new int[v+1];
-                    firstEdge[firstEdge.length-1] = e;
                     destination = new int[e];
                 } else if (c =='e'){
 
@@ -86,15 +88,19 @@ public class AdjArrayGraph {
                     }
                     int dst = Integer.parseInt(intStr.toString());
 
+                    destination[firstEdge[firstEdge.length-1]] = dst;
                     if (src > dst){
-                        firstEdge[src]++;
+                        for(i = src; i < firstEdge.length; i++){
+                            firstEdge[i]++;
+                        }
+                    } else {
+                        firstEdge[firstEdge.length-1]++;
                     }
 
-                    for (i = firstEdge[src]; i < firstEdge[src+1]; i++){
-                        if (destination[i] == 0){
-                            destination[i] = src;
-                        }
-                    }
+
+
+
+
                 } else if (c != 'c') {
                     throw new IOException("Unknown line marker " + c);
                 }
