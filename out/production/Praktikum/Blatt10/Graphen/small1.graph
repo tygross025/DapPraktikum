@@ -1,0 +1,44 @@
+c FILE: small1.graph
+c
+c SOURCE: DAP2
+c
+p edge 10 39
+e 7 9
+e 7 1
+e 7 3
+e 7 5
+e 7 0
+e 7 4
+e 7 6
+e 9 1
+e 9 3
+e 9 5
+e 9 4
+e 9 8
+e 9 2
+e 9 6
+e 1 3
+e 1 4
+e 1 8
+e 1 2
+e 1 6
+e 3 5
+e 3 0
+e 3 4
+e 3 8
+e 3 2
+e 3 6
+e 5 0
+e 5 4
+e 5 8
+e 5 6
+e 0 4
+e 0 8
+e 0 2
+e 0 6
+e 4 8
+e 4 2
+e 4 6
+e 8 2
+e 8 6
+e 2 6
