@@ -136,7 +136,14 @@ public class AdjArrayGraph {
     }
 
     public int numberOfNeighbors(int node){
-        return firstEdge[node+1] - 1 - firstEdge[node];
+        //not sure about this
+        int val = 0;
+        for (int i = 0; i < destination.length; i++){
+            if (destination[i] == node){
+                val++;
+            }
+        }
+        return val;
     }
 
     public int getNeighbor(int node, int k){
