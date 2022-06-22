@@ -13,7 +13,7 @@ public class AdjArrayGraphTest {
             System.err.println(e.getMessage());
             return;
         }
-        System.out.println("Neighbors: " + graph.numberOfNeighbors(0));
+        System.out.println("Has HamiltonCycle: " + graph.hasHamiltonCycle());
         System.out.println(graph.toString());
     }
 }

@@ -64,6 +64,9 @@ public class AdjArrayGraph {
 
                     firstEdge = new int[v+1];
                     destination = new int[e];
+                    for(int n: destination){
+                        n = -1;
+                    }
                 } else if (c =='e'){
 
                     if (!init){
@@ -88,18 +91,13 @@ public class AdjArrayGraph {
                     }
                     int dst = Integer.parseInt(intStr.toString());
 
-                    destination[firstEdge[firstEdge.length-1]] = dst;
-                    if (src > dst){
-                        for(i = src; i < firstEdge.length; i++){
-                            firstEdge[i]++;
-                        }
-                    } else {
-                        firstEdge[firstEdge.length-1]++;
+
+
+                    //src und dst speichern
+                    destination[firstEdge[src+1]] = dst;
+                    for(i = src+1; i < firstEdge.length; i++){
+                        firstEdge[i]++;
                     }
-
-
-
-
 
                 } else if (c != 'c') {
                     throw new IOException("Unknown line marker " + c);
@@ -121,8 +119,16 @@ public class AdjArrayGraph {
     public String toString(){
         StringBuilder returnStr = new StringBuilder();
 
-        returnStr.append(Arrays.toString(firstEdge) + "\n");
-        returnStr.append(Arrays.toString(destination));
+        for (int i = 0; i < numberOfNodes(); i++){ //Für alle Knoten
+            for(int j = 0; j < numberOfNeighbors(i); j++){ //Für alle Nachbarn von knoten i
+                if (true){//Knoten kann nicht mit sich selbst verbindet sein
+                    returnStr.append("Knoten " + i + " verbindet zu " + getNeighbor(i,j) + "\n");
+                }
+            }
+        }
+        returnStr.append("Has HamiltonCycle: " + hasHamiltonCycle() + "\n");
+        returnStr.append("firstEdge: " + Arrays.toString(firstEdge) + "\n");
+        returnStr.append("destination: " + Arrays.toString(destination));
 
         return returnStr.toString();
     }
@@ -136,18 +142,73 @@ public class AdjArrayGraph {
     }
 
     public int numberOfNeighbors(int node){
-        //not sure about this
-        int val = 0;
-        for (int i = 0; i < destination.length; i++){
-            if (destination[i] == node){
-                val++;
-            }
-        }
-        return val;
+        return firstEdge[node+1] - firstEdge[node];
     }
 
     public int getNeighbor(int node, int k){
         return destination[firstEdge[node] + k];
     }
+
+    public boolean hasHamiltonCycle(){
+        for(int i = 0; i < numberOfNodes(); i++){
+            if (hamiltonCycle(new int[0], i)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hamiltonCycle(int[] besucht, int next){
+        if(next==-1){
+            //Suche ist fertig
+
+            if (besucht.length != numberOfNodes()){
+                return false;
+            }
+
+            for (int i = 0; i < numberOfNeighbors(besucht[0]); i++){
+                //Für alle Knoten verbindet mit der letzten Knoten
+                if(getNeighbor(besucht[0], i) == besucht[besucht.length-1]){
+                    //Falls die Knoten mit der ersten Nachbar ist
+                    return true;
+                }
+            }
+            return false;
+        } else{
+            //Besuch nächste in queue
+            int[] newBesucht = new int[besucht.length+1];
+            for(int i = 1; i < newBesucht.length; i++){
+                newBesucht[i] = besucht[i-1];
+            }
+            newBesucht[0] = next;
+
+            if (numberOfNeighbors(next) == 0){
+
+            }
+
+            for (int i = 0; i < numberOfNeighbors(next); i++){
+                //Für alle Nachbarn i
+
+                int nachbar = getNeighbor(newBesucht[0], i);
+
+                boolean schonBesucht = false;
+                for (int n:newBesucht) {
+                    //Prüf ob Knoten next schon besucht ist
+                    if (n == nachbar){
+                        schonBesucht = true;
+                    }
+                }
+                if (!schonBesucht && hamiltonCycle(newBesucht, nachbar)){
+                    return true;
+                }
+            }
+            //Hier ist nur erreicht falls next keine Nachbarn hat oder sie alle besucht sind.
+            //Prüf ob Pfad ein hamiltonCycle ist
+            return hamiltonCycle(newBesucht, -1);
+
+        }
+    }
+
+
 
 }
